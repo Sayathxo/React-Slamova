@@ -13,7 +13,7 @@ function App() {
             </header>
             
             <section>
-                <table id="dovednosti">
+                <table id="postupy">
                     
                     <tr class="tabulka">
                          <td>
@@ -31,7 +31,6 @@ function App() {
                         
                     </tr>
                 </table>
-
                 
             </section>
            
