@@ -1,23 +1,46 @@
-import logo from './logo.svg';
+
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <h1>Kuchařka</h1>
+      </header> 
+      <article>
+            <header>
+                <h1>Recepty</h1>
+            </header>
+            
+            <section>
+                <table id="dovednosti">
+                    
+                    <tr class="tabulka">
+                         <td>
+                            <h2>Čočková polévka</h2>
+                            <p>čočkovka čočkovka čočkovka čočkovka čočkovka čočkovka čočkovka čočkovka  </p>
+                        </td>
+                        <td>
+                            <h2>Krtkův dort</h2>
+                            <p>bla bla blabla bla blabla bla blabla bla blabla bla blabla bla blabla bla bla</p>
+                        </td>
+                        <td>
+                            <h2>Losos na grilu</h2>
+                            <p>aaaaaaaaaaaa aaaaaaaaaaaaa a aaaaa aaaaaaaaaaa aa</p>
+                        </td>
+                        
+                    </tr>
+                </table>
+
+                
+            </section>
+           
+        </article>   
+    <footer>
+        Vytvořila &copy; Lenka Slámová 2024
+    </footer> 
+        
+      
     </div>
   );
 }
