@@ -19,10 +19,7 @@
   color: antiquewhite;
 }
 
-.cardTitle{
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-weight: bold;
-}
+
 
 footer {
   background-color: #282c34;
@@ -33,6 +30,7 @@ footer {
   margin: 10px;
   width: calc(100% - 20px);
   box-sizing: border-box;
+  box-shadow: 2px #282c34;
 }
 
 .cardImg {
@@ -44,4 +42,9 @@ footer {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background-color: rgb(241, 241, 213);
+}
+
+.cardText {
+  color: rgb(92, 92, 94);
 }
