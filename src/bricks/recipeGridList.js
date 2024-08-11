@@ -1,6 +1,7 @@
 import React from "react";
 import RecipeCard from "./recipeCard";
 import { Col, Row } from 'react-bootstrap';
+import '../App.css';
 
 function RecipeGridList(props) {
     return (

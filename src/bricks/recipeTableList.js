@@ -1,5 +1,6 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
+import '../App.css';
 
 function RecipeTableList(props) {
   return (

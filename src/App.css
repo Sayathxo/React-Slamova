@@ -1,9 +1,7 @@
 .App {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .App-header {
@@ -20,33 +18,98 @@
   font-style: italic;
 }
 
-
-
 footer {
   background-color: #282c34;
   color: antiquewhite;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: auto;
 }
 
-.card {
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin: 10px;
   width: calc(100% - 20px);
-  box-sizing: border-box;
-  box-shadow: 2px #282c34;
+  height: 100%;  
+}
+
+.smallCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 10px;
 }
 
 .cardImg {
   max-width: 100%;
-  height: auto;
+  max-height: 120px;
+}
+
+.smallCardImg {
+  max-width: 100%;
+  max-height: 120px;
 }
 
 .cardBody {
-  display: flex;
-  flex-direction: column;
+  background-color:antiquewhite;
+  flex-grow: 1;
   justify-content: space-between;
-  background-color: rgb(241, 241, 213);
 }
 
-.cardText {
-  color: rgb(92, 92, 94);
+.cardTitle {
+  
+  font-size: 1.5rem;
+  margin-bottom: 10px;
 }
 
+.cardiText {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: justify;
+}
+
+.smallCardBody {
+  background-color:antiquewhite;
+}
+
+.navBrand {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
+  color: #282c34 ;
+  font-size: 4vh;
+  font-weight:500;
+  font-style: italic;
+}
+
+.btn-search {
+  color: #282c34 !important;
+  border-color: #282c34 !important;
+  border-radius: 5px;
+  margin-right: 8px;
+}
+
+.btn-search:hover {
+  background-color: #282c34 !important; 
+  color: antiquewhite !important; 
+  border-color: #282c34 !important; 
+}
+
+.btn-style {
+  color: #282c34 !important;
+  border-color: #282c34 !important;
+  border-radius: 5px;
+}
+
+.btn-style:hover {
+  background-color: #282c34 !important; 
+  color: antiquewhite !important; 
+  border-color: #282c34 !important; 
+}
+
+.btn-active {
+  background-color: #282c34 !important;
+  color: antiquewhite !important;
+  border-color: #282c34 !important;
+}

@@ -1,6 +1,7 @@
 import React from "react";
 import RecipeSmall from "./recipeSmall";
 import { Col, Row } from 'react-bootstrap';
+import '../App.css';
 
 function RecipeSmallList(props) {
   return (

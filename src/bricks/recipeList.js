@@ -1,47 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import '../App.css';
 import RecipeGridList from "./recipeGridList";
 import RecipeTableList from "./recipeTableList";
 import RecipeSmallList from "./recipeSmallList";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import Icon from "@mdi/react";
-import { mdiTable, mdiViewGridOutline, mdiViewList } from "@mdi/js";
+
+import { mdiTable, mdiViewGridOutline, mdiViewList, mdiMagnify } from "@mdi/js";
 
 function RecipeList(props) {
   const [viewType, setViewType] = useState("grid");
+  const [searchBy, setSearchBy] = useState("");
+
+  const filteredrecipeList = useMemo(() => {
+    return props.recipeList.filter((item) => {
+      return (
+        item.name.toLowerCase().includes(searchBy.toLowerCase()) ||
+        item.id.toLowerCase().includes(searchBy.toLowerCase())
+      );
+    });
+  }, [searchBy, props.recipeList]);
+
+  function handleSearch(event) { 
+    event.preventDefault();
+    setSearchBy(event.target["searchInput"].value);
+  }
+  
+  function handleSearchDelete(event) { 
+    if (!event.target.value) setSearchBy(""); 
+  }
 
   return (
     <div>
       <Navbar bg="light">
         <div className="container-fluid">
-          <Navbar.Brand>Seznam receptů</Navbar.Brand>
+          <Navbar.Brand className="navBrand">Seznam receptů</Navbar.Brand>
           <div>
+          <Form className="d-flex" onSubmit={handleSearch}>
+              <Form.Control
+                id={"searchInput"}
+                style={{ maxWidth: "150px" }}
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+                onChange={handleSearchDelete}
+              />
+              <Button
+                className= "btn-search"
+                variant="outline-success"
+                type="submit"
+              >
+                <Icon size={1} path={mdiMagnify} />
+              </Button>
             <Button
-              variant={viewType === "grid" ? "primary" : "outline-primary"}
+              className={`btn-style ${viewType === "grid" ? "btn-active" : ""}`}
               onClick={() => setViewType("grid")}
-              className="mr-2"
+              variant="none"
             >
               <Icon size={1} path={mdiViewGridOutline} /> Velký
             </Button>
             <Button
-              variant={viewType === "small" ? "primary" : "outline-primary"}
+              className={`btn-style ${viewType === "small" ? "btn-active" : ""}`}
               onClick={() => setViewType("small")}
-              className="mr-2"
+              variant="none"
             >
               <Icon size={1} path={mdiViewList} /> Malý
             </Button>
             <Button
-              variant={viewType === "table" ? "primary" : "outline-primary"}
+              className={`btn-style ${viewType === "table" ? "btn-active" : ""}`}
               onClick={() => setViewType("table")}
+              variant="none"
             >
               <Icon size={1} path={mdiTable} /> Tabulka
             </Button>
+            </Form>
           </div>
         </div>
       </Navbar>
-      {viewType === "grid" && <RecipeGridList recipeList={props.recipeList} />}
-      {viewType === "small" && <RecipeSmallList recipeList={props.recipeList} />}
-      {viewType === "table" && <RecipeTableList recipeList={props.recipeList} />}
+      {viewType === "grid" && <RecipeGridList recipeList={filteredrecipeList} />}
+      {viewType === "small" && <RecipeSmallList recipeList={filteredrecipeList} />}
+      {viewType === "table" && <RecipeTableList recipeList={filteredrecipeList} />}
     </div>
   );
 }
