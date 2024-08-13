@@ -113,3 +113,21 @@ footer {
   color: antiquewhite !important;
   border-color: #282c34 !important;
 }
+
+.loading {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.error {
+  background-color: lightpink;
+  padding: 32px;
+}
+
+.recipeList {
+  max-width: 100%;
+  overflow: auto;
+}

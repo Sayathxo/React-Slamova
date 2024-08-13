@@ -8,7 +8,7 @@ function RecipeSmallList(props) {
     <Row>
       {props.recipeList.map((recipe) => (
         <Col xs={12} sm={6} md={4} lg={3} key={recipe.id}>
-          <RecipeSmall recipe={recipe} />
+          <RecipeSmall recipe={recipe}  ingredientList={props.ingredientList} />
         </Col>
       ))}
     </Row>
