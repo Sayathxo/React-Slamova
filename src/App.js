@@ -9,7 +9,8 @@ const cookbook = {
   name: "Báječná kuchařka"
 };
 
-function App() {
+function App() { 
+  // konstanty k uchovávání stavu načítání receptů/ingrediencí (výchozí stav je pending)
   const [recipeLoadCall, setRecipeLoadCall] = useState({
     state: "pending",
   });
@@ -17,10 +18,13 @@ function App() {
     state: "pending",
   });
 
+  //Načtení seznamu receptů při prvním vykreslení komponenty
   useEffect(() => {
+    //volání API metodou GET
     fetch(`http://localhost:3000/recipe/list`, {
       method: "GET",
     })
+        //Pokud je odpověď úspěšná, uloží data do recipeLoadCall success, jinak error a uloží chybu
       .then(async (response) => {
         const responseJson = await response.json();
         if (response.status >= 400) {
@@ -29,12 +33,13 @@ function App() {
           setRecipeLoadCall({ state: "success", data: responseJson });
         }
       })
-      .catch(error => {
+      .catch(error => { //když dojde k chybě při volání API
         console.error('Error during fetch:', error);
         setRecipeLoadCall({ state: "error", error });
       });
   }, []);
 
+  //Načtení seznamu ingrediencí při prvním vykreslení komponenty -> vše jinak podobně jako u receptů výše
   useEffect(() => {
     fetch(`http://localhost:3000/ingredient/list`, {
       method: "GET",
@@ -53,10 +58,11 @@ function App() {
       });
   }, []);
 
+  //funkce rozhoduje, co se zobrazí na základě stavu načítání receptů
   function getRecipe() {
     switch (recipeLoadCall.state) {
       case "pending":
-        return (
+        return ( // zobrazí ikonku načítání
           <div className="loading">
             <Icon size={2} path={mdiLoading} spin={true} />
           </div>
@@ -77,13 +83,11 @@ function App() {
       case "error":
         return (
           <div className="error">
-            <div>Nepodařilo se načíst data o receptech nebo ingrediencích.</div>
-            <br />
-            <pre>{JSON.stringify(recipeLoadCall.error || ingredientLoadCall.error, null, 2)}</pre>
+            <div>Upsík dupsík, něco se pokazilo a nenačetla se data o receptech. Dnes bude asi k večeři "co dům dal".</div>
           </div>
         );
       default:
-        return null;
+      return null;
     }
   }
 
