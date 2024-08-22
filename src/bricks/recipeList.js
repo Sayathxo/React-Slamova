@@ -45,13 +45,17 @@ function RecipeList(props) {
     if (!event.target.value) setSearchBy(""); 
   }
 
-  //Navigační lišta - lupa a tlačítka na změny view
+  /** Navigační lišta - lupa a tlačítka na změny view
+  * collapseOnSelect a expand="sm" - část nav se bude schovávat od sm níž
+  * Navbar.Collapse - část nav, která se bude skrývat, viditelná na stisk Navbar.Toggle
+  * */
   return (
     <div>
-      <Navbar bg="light">
+      <Navbar collapseOnSelect expand="sm" bg="light">
         <div className="container-fluid">
           <Navbar.Brand className="navBrand">Seznam receptů</Navbar.Brand>
-          <div>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav" style={{ justifyContent: "right" }}>
             <Form className="d-flex" onSubmit={handleSearch}>
               <Form.Control
                 id={"searchInput"}
@@ -68,34 +72,51 @@ function RecipeList(props) {
               >
                 <Icon size={1} path={mdiMagnify} />
               </Button>
-              <Button
-                className={`btn-style ${viewType === "grid" ? "btn-active" : ""}`}
-                onClick={() => setViewType("grid")}
-                variant="none"
-              >
-                <Icon size={1} path={mdiViewGridOutline} /> Velký
-              </Button>
-              <Button
-                className={`btn-style ${viewType === "small" ? "btn-active" : ""}`}
-                onClick={() => setViewType("small")}
-                variant="none"
-              >
-                <Icon size={1} path={mdiViewList} /> Malý
-              </Button>
-              <Button
-                className={`btn-style ${viewType === "table" ? "btn-active" : ""}`}
-                onClick={() => setViewType("table")}
-                variant="none"
-              >
-                <Icon size={1} path={mdiTable} /> Tabulka
-              </Button>
+              <div className="d-none d-md-flex">
+                <Button
+                  className={`btn-style ${viewType === "grid" ? "btn-active" : ""}`}
+                  onClick={() => setViewType("grid")}
+                  variant="none"
+                >
+                  <Icon size={1} path={mdiViewGridOutline} /> Velký
+                </Button>
+                <Button
+                  className={`btn-style ${viewType === "small" ? "btn-active" : ""}`}
+                  onClick={() => setViewType("small")}
+                  variant="none"
+                >
+                  <Icon size={1} path={mdiViewList} /> Malý
+                </Button>
+                <Button
+                  className={`btn-style ${viewType === "table" ? "btn-active" : ""}`}
+                  onClick={() => setViewType("table")}
+                  variant="none"
+                >
+                  <Icon size={1} path={mdiTable} /> Tabulka
+                </Button>
+              </div>
             </Form>
-          </div>
+          </Navbar.Collapse>
         </div>
       </Navbar>
-      {viewType === "grid" && <RecipeGridList recipeList={filteredRecipeList} />}
-      {viewType === "small" && <RecipeSmallList recipeList={filteredRecipeList} ingredientList={props.ingredientList}/>}
-      {viewType === "table" && <RecipeTableList recipeList={filteredRecipeList} />}
+      <div className="container">
+        {filteredRecipeList.length ? (
+          <>
+            <div className={"d-block d-md-none"}>
+              <RecipeSmallList recipeList={filteredRecipeList} ingredientList={props.ingredientList} />
+            </div>
+            <div className={"d-none d-md-block"}>
+              {viewType === "grid" && <RecipeGridList recipeList={filteredRecipeList} />}
+              {viewType === "small" && <RecipeSmallList recipeList={filteredRecipeList} ingredientList={props.ingredientList} />}
+              {viewType === "table" && <RecipeTableList recipeList={filteredRecipeList} />}
+            </div>
+          </>
+        ) : (
+          <div style={{ margin: "16px auto", textAlign: "center" }}>
+            Nejsou žádné recepty ke zobrazení
+          </div>
+        )}
+      </div>
     </div>
   );
 }
