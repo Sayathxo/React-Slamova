@@ -4,12 +4,19 @@ import RecipeList from "./bricks/recipeList"
 import { useState, useEffect } from "react";
 import Icon from "@mdi/react";
 import { mdiLoading } from "@mdi/js";
+import { Outlet, useNavigate } from "react-router-dom";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Offcanvas from "react-bootstrap/Offcanvas";
 
 const cookbook = {
   name: "Báječná kuchařka"
 };
 
 function App() { 
+  let navigate = useNavigate();
   // konstanty k uchovávání stavu načítání receptů/ingrediencí (výchozí stav je pending)
   const [recipeLoadCall, setRecipeLoadCall] = useState({
     state: "pending",
@@ -62,23 +69,25 @@ function App() {
   function getRecipe() {
     switch (recipeLoadCall.state) {
       case "pending":
-        return ( // zobrazí ikonku načítání
+        return (
           <div className="loading">
             <Icon size={2} path={mdiLoading} spin={true} />
           </div>
         );
       case "success":
         return (
-          <>
-            <header className="App-header">
-              {cookbook.name}
-            </header> 
-            <RecipeList recipeList={recipeLoadCall.data}
-                        ingredientList={ingredientLoadCall.data} />
-            <footer>
-              Vytvořila &copy; Lenka Slámová 2024
-            </footer>
-          </>
+          <NavDropdown title="Vyber recept" id="navbarScrollingDropdown">
+            {recipeLoadCall.data.map((recipe) => {
+              return (
+                <NavDropdown.Item
+                  key={recipe.id}
+                  onClick={() => navigate("/recipeDetail?id=" + recipe.id)}
+                >
+                  {recipe.name}
+                </NavDropdown.Item>
+              );
+            })}
+          </NavDropdown>
         );
       case "error":
         return (
@@ -87,11 +96,49 @@ function App() {
           </div>
         );
       default:
-      return null;
+        return null;
+  
     }
   }
 
-  return <div className="App">{getRecipe()}</div>;
+  return (
+    <div className="App">
+      <Navbar
+        fixed="top"
+        expand={"sm"}
+        className="mb-3"
+        bg="dark"
+        variant="dark"
+      >
+        <Container fluid>
+          <Navbar.Brand onClick={() => navigate("/") } className="navbar-brand-custom">
+            Báječná kuchařka
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-sm`} />
+          <Navbar.Offcanvas id={`offcanvasNavbar-expand-sm`}>
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title id={`offcanvasNavbarLabel-expand-sm`} className="offcanvas-title-custom">
+                Báječná kuchařka
+              </Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Nav className="justify-content-end flex-grow-1 pe-3">
+                  {getRecipe()}
+                <Nav.Link onClick={() => navigate("/recipeList")}>
+                  Recepty
+                </Nav.Link>
+                <Nav.Link onClick={() => navigate("/ingredientList")}>
+                  Ingredience
+                </Nav.Link>
+              </Nav>
+            </Offcanvas.Body>
+          </Navbar.Offcanvas>
+        </Container>
+      </Navbar>
+
+      <Outlet />
+    </div>
+  );
 }
 
 export default App;

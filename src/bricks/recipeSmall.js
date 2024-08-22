@@ -3,6 +3,14 @@ import Card from "react-bootstrap/Card";
 
 
 function RecipeSmall(props) {
+  // Ověření, že props.recipe a props.recipe.ingredients existují
+  if (!props.recipe || !props.recipe.ingredients || !Array.isArray(props.recipe.ingredients)) {
+    return <div>Loading...</div>;
+  }
+   // Ověření, že props.ingredientList existuje a je to pole
+   if (!props.ingredientList || !Array.isArray(props.ingredientList)) {
+    return <div>Loading...</div>;
+  }
   //map - iterace přes seznam ingrediencí
   const ingredients = props.recipe.ingredients.map(ingredient => {
     //najde podrobnosti o ingredienci v seznamu všech dle id
