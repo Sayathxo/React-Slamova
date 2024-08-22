@@ -1,7 +1,10 @@
+/*** základní stylování aplikace ***/
 .App {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding-top: 25px;
+  
 }
 
 .App-header {
@@ -26,6 +29,12 @@ footer {
   margin-top: auto;
 }
 
+.recipeList {
+  max-width: 100%;
+  overflow: auto;
+}
+
+/*** stylování velkých karet ***/
 .recipe-card {
   display: flex;
   flex-direction: column;
@@ -35,23 +44,6 @@ footer {
   height: 100%;  
 }
 
-.smallCard {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 10px;
-}
-
-.cardImg {
-  max-width: 100%;
-  max-height: 120px;
-}
-
-.smallCardImg {
-  max-width: 100%;
-  max-height: 120px;
-}
-
 .cardBody {
   background-color:antiquewhite;
   flex-grow: 1;
@@ -59,7 +51,6 @@ footer {
 }
 
 .cardTitle {
-  
   font-size: 1.5rem;
   margin-bottom: 10px;
 }
@@ -71,10 +62,30 @@ footer {
   text-align: justify;
 }
 
+.cardImg {
+  max-width: 100%;
+  max-height: 120px;
+}
+
+/*** stylování malých karet ***/
+
+.smallCardImg {
+  max-width: 100%;
+  max-height: 120px;
+}
+
+.smallCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 10px;
+}
+
 .smallCardBody {
   background-color:antiquewhite;
 }
 
+/*** stylování hlavičky navigace ***/
 .navBrand {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
   color: #282c34 ;
@@ -83,6 +94,7 @@ footer {
   font-style: italic;
 }
 
+/*** stylování tlačítek navigace ***/
 .btn-search {
   color: #282c34 !important;
   border-color: #282c34 !important;
@@ -114,6 +126,7 @@ footer {
   border-color: #282c34 !important;
 }
 
+/*** stylování statů ***/
 .loading {
   width: 100vw;
   height: 100vh;
@@ -127,7 +140,52 @@ footer {
   padding: 32px;
 }
 
-.recipeList {
-  max-width: 100%;
-  overflow: auto;
+/*** tlačítko na rozrollování delšího textu v view Tabulky ***/
+.expand-table-button {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
 }
+
+.expand-table-button:hover {
+  color: darkblue;
+}
+
+/*** stylování domovské stránky Home***/
+.home-container {
+  position: relative;
+  text-align: center;
+  color: antiquewhite;
+}
+
+.home-background {
+  width: 100%;
+  height: 100vh;
+  background-image: url('https://www.restaurace-lavicka.cz/wp-content/uploads/2022/12/10.jpeg'); 
+  background-size: cover;
+  background-position: center;
+}
+
+.home-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3em;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+/*** stylování routové navigace ***/
+.navbar-brand-custom {
+  font-size: 1.5em; 
+  font-weight:500;
+  color: antiquewhite !important; 
+  font-style: italic;
+}
+
+
+
