@@ -187,5 +187,16 @@ footer {
   font-style: italic;
 }
 
+/*** stylování tlačítka na přidání receptu a přidání ingrediencí***/
+.button-create-recipe {
+  background-color: #3f444e !important;
+  color: antiquewhite !important;
+  border-color: #3f444e !important;
+}
+.button-create-recipe:hover {
+  background-color: #2e3138 !important;
+  color: antiquewhite !important;
+  border-color: #2e3138 !important;
+}
 
 
