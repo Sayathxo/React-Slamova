@@ -2,13 +2,19 @@ import React, { useState } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { units } from "./units"; 
 
+//Props: show - pro zobrazení modál.okna), handleClose - zavření, ingredientList - seznam možných ingrediencí
 function CreateRecipe({ show, handleClose, ingredientList }) {
+  // správa komponent
   const [recipeName, setRecipeName] = useState("");
   const [recipeInstructions, setRecipeInstructions] = useState("");
   const [ingredients, setIngredients] = useState([
     { ingredientId: "", amount: "", unit: "" },
   ]);
 
+  // validování vstupu od uživatele
+  const [validated, setValidated] = useState(false);
+
+  // aktualizuje pole určité ingredience v seznamu 
   const handleIngredientChange = (index, field, value) => {
     const newIngredients = [...ingredients];
     newIngredients[index] = {
@@ -17,13 +23,28 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
     };
     setIngredients(newIngredients);
   };
-
+  
+  // přidá novou prázdnou ingredienci do seznamu
   const addIngredient = () => {
     setIngredients([...ingredients, { ingredientId: "", amount: "", unit: "" }]);
   };
-
+  
+  // odebere prázdnou ingredienci ze seznamu
+  const removeIngredient = (index) => {
+    const newIngredients = [...ingredients];
+    newIngredients.splice(index, 1);
+    setIngredients(newIngredients);
+  };
+  // vytvoří objekt newRecipe se jménem, instrukcemi a filtrovaným seznamem ingrediencí
   const handleSubmit = (event) => {
+    const form = event.currentTarget;
     event.preventDefault();
+    event.stopPropagation();
+
+    if (form.checkValidity() === false) {
+      setValidated(true);
+      return;
+    }
 
     const newRecipe = {
       name: recipeName,
@@ -40,17 +61,19 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
     setRecipeName("");
     setRecipeInstructions("");
     setIngredients([{ ingredientId: "", amount: "", unit: "" }]);
+    setValidated(false);
 
     // Zavřít modální okno
     handleClose();
   };
 
+  // rendrování vlastní komponenty s tlačítky na přidání ingrediencí, zavření a odeslání formuláře
   return (
     <Modal show={show} onHide={handleClose} size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title>Přidat nový recept</Modal.Title>
       </Modal.Header>
-      <Form onSubmit={handleSubmit}>
+      <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label><strong>Název receptu</strong></Form.Label>
@@ -59,7 +82,11 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
               value={recipeName}
               onChange={(e) => setRecipeName(e.target.value)}
               required
+              maxLength={50}
             />
+            <Form.Control.Feedback type="invalid">
+              Musíš přeci pojmenovat své veledílo, ale zase se moc nerozepisuj.
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label><strong>Postup receptu</strong></Form.Label>
@@ -69,13 +96,17 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
               value={recipeInstructions}
               onChange={(e) => setRecipeInstructions(e.target.value)}
               required
+              maxLength={500}
             />
+            <Form.Control.Feedback type="invalid">
+              Vím, že to je pro tebe úplně jasná věc, ale nám by se nějaký postup hodil. Maximálně 500 znaků prosím.
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Label>Ingredience</Form.Label>
           <Row className="mb-3">
             <Col><strong>Ingredience</strong></Col>
             <Col><strong>Množství</strong></Col>
             <Col><strong>Jednotka</strong></Col>
+            <Col></Col> {/* Prázdný sloupec pro tlačítko "Odebrat" */}
           </Row>
           {ingredients.map((ingredient, index) => (
             <Row key={index} className="mb-2 g-0">
@@ -85,6 +116,7 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
                   onChange={(e) =>
                     handleIngredientChange(index, "ingredientId", e.target.value)
                   }
+                  required
                 >
                   <option value="">Vyberte ingredienci</option>
                   {ingredientList.map((ingredientOption) => (
@@ -93,16 +125,25 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
                     </option>
                   ))}
                 </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  Chybí ti surovina.
+                </Form.Control.Feedback>
               </Col>
               <Col>
                 <Form.Control
-                  type="text"
+                  type="number"
                   placeholder="Množství"
                   value={ingredient.amount}
                   onChange={(e) =>
                     handleIngredientChange(index, "amount", e.target.value)
                   }
+                  required
+                  min={1}
+                  max={1000}
                 />
+                <Form.Control.Feedback type="invalid">
+                  Kolik tam toho dáš? (1-1000).
+                </Form.Control.Feedback>
               </Col>
               <Col>
                 <Form.Select
@@ -110,6 +151,7 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
                   onChange={(e) =>
                     handleIngredientChange(index, "unit", e.target.value)
                   }
+                  required
                 >
                   <option value="">Vyberte jednotku</option>
                   {units.map((unit, unitIndex) => (
@@ -118,13 +160,18 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
                     </option>
                   ))}
                 </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  Lžičku nebo vagón?
+                </Form.Control.Feedback>
+              </Col>
+              <Col>
+                <Button variant="danger" onClick={() => removeIngredient(index)}>
+                  Odebrat
+                </Button>
               </Col>
             </Row>
           ))}
-          <Button
-            className="button-create-recipe"
-            onClick={addIngredient}
-          >
+          <Button className="button-create-recipe" onClick={addIngredient}>
             Přidat ingredienci
           </Button>
         </Modal.Body>
