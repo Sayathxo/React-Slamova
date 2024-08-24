@@ -8,7 +8,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown, Offcanvas, Button } from "react-bootstrap";
 import CreateRecipe from "./bricks/CreateRecipe";
 
-function App() { 
+function App() {
+
   let navigate = useNavigate();
   const [showModal, setShowModal] = useState(false); //stavy pro modální okno CreateRecipe
   // konstanty k uchovávání stavu načítání receptů/ingrediencí (výchozí stav je pending)
@@ -25,7 +26,7 @@ function App() {
     fetch(`http://localhost:3000/recipe/list`, {
       method: "GET",
     })
-        //Pokud je odpověď úspěšná, uloží data do recipeLoadCall success, jinak error a uloží chybu
+      //Pokud je odpověď úspěšná, uloží data do recipeLoadCall success, jinak error a uloží chybu
       .then(async (response) => {
         const responseJson = await response.json();
         if (response.status >= 400) {
@@ -91,7 +92,7 @@ function App() {
         );
       default:
         return null;
-  
+
     }
   }
   const handleModalClose = () => setShowModal(false);
