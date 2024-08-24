@@ -5,18 +5,13 @@ import { useState, useEffect } from "react";
 import Icon from "@mdi/react";
 import { mdiLoading } from "@mdi/js";
 import { Outlet, useNavigate } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Offcanvas from "react-bootstrap/Offcanvas";
+import { Container, Nav, Navbar, NavDropdown, Offcanvas, Button } from "react-bootstrap";
+import CreateRecipe from "./bricks/CreateRecipe";
 
-const cookbook = {
-  name: "Báječná kuchařka"
-};
+function App() {
 
-function App() { 
   let navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false); //stavy pro modální okno CreateRecipe
   // konstanty k uchovávání stavu načítání receptů/ingrediencí (výchozí stav je pending)
   const [recipeLoadCall, setRecipeLoadCall] = useState({
     state: "pending",
@@ -31,7 +26,7 @@ function App() {
     fetch(`http://localhost:3000/recipe/list`, {
       method: "GET",
     })
-        //Pokud je odpověď úspěšná, uloží data do recipeLoadCall success, jinak error a uloží chybu
+      //Pokud je odpověď úspěšná, uloží data do recipeLoadCall success, jinak error a uloží chybu
       .then(async (response) => {
         const responseJson = await response.json();
         if (response.status >= 400) {
@@ -97,9 +92,11 @@ function App() {
         );
       default:
         return null;
-  
+
     }
   }
+  const handleModalClose = () => setShowModal(false);
+  const handleModalShow = () => setShowModal(true);
 
   return (
     <div className="App">
@@ -111,7 +108,7 @@ function App() {
         variant="dark"
       >
         <Container fluid>
-          <Navbar.Brand onClick={() => navigate("/") } className="navbar-brand-custom">
+          <Navbar.Brand onClick={() => navigate("/")} className="navbar-brand-custom">
             Báječná kuchařka
           </Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-sm`} />
@@ -123,13 +120,12 @@ function App() {
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3">
-                  {getRecipe()}
-                <Nav.Link onClick={() => navigate("/recipeList")}>
-                  Recepty
-                </Nav.Link>
-                <Nav.Link onClick={() => navigate("/ingredientList")}>
-                  Ingredience
-                </Nav.Link>
+                {getRecipe()}
+                <Nav.Link onClick={() => navigate("/recipeList")}>Recepty</Nav.Link>
+                <Nav.Link onClick={() => navigate("/ingredientList")}>Ingredience</Nav.Link>
+                <Button variant="primary" onClick={handleModalShow} className="button-create-recipe">
+                  Přidej recept
+                </Button>
               </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>
@@ -137,8 +133,13 @@ function App() {
       </Navbar>
 
       <Outlet />
+
+      <CreateRecipe
+        show={showModal}
+        handleClose={handleModalClose}
+        ingredientList={ingredientLoadCall.data || []}
+      />
     </div>
   );
 }
-
 export default App;
