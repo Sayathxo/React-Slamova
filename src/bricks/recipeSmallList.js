@@ -3,12 +3,12 @@ import RecipeSmall from "./recipeSmall";
 import { Col, Row } from 'react-bootstrap';
 
 
-function RecipeSmallList(props) {
+function RecipeSmallList({ recipeList, ingredientList, onEditClick }) {
   return ( //responzivní rozvržení mřížky
     <Row>
-      {props.recipeList.map((recipe) => ( //iterace přes seznam receptů pomocí id a jejich vykreslení jako malé karty
+      {recipeList.map((recipe) => ( //iterace přes seznam receptů pomocí id a jejich vykreslení jako malé karty a editace karty na onClick
         <Col xs={12} sm={6} md={4} lg={3} key={recipe.id}>
-          <RecipeSmall recipe={recipe}  ingredientList={props.ingredientList} />
+          <RecipeSmall recipe={recipe}  ingredientList={ingredientList} onEditClick={onEditClick}/>
         </Col>
       ))}
     </Row>

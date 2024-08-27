@@ -1,29 +1,29 @@
 import React from "react";
-import Card from "react-bootstrap/Card";
+import { Card, Button } from "react-bootstrap";
+import { FaEdit } from 'react-icons/fa';
 
-
-function RecipeSmall(props) {
+function RecipeSmall({ recipe, ingredientList, onEditClick }) {
   // Ověření, že props.recipe a props.recipe.ingredients existují
-  if (!props.recipe || !props.recipe.ingredients || !Array.isArray(props.recipe.ingredients)) {
+  if (!recipe || !recipe.ingredients || !Array.isArray(recipe.ingredients)) {
     return <div>Loading...</div>;
   }
    // Ověření, že props.ingredientList existuje a je to pole
-   if (!props.ingredientList || !Array.isArray(props.ingredientList)) {
+   if (!ingredientList || !Array.isArray(ingredientList)) {
     return <div>Loading...</div>;
   }
   //map - iterace přes seznam ingrediencí
-  const ingredients = props.recipe.ingredients.map(ingredient => {
+  const ingredients = recipe.ingredients.map(ingredient => {
     //najde podrobnosti o ingredienci v seznamu všech dle id
-    const ingredientDetails = props.ingredientList.find(item => item.id === ingredient.id);
+    const ingredientDetails = ingredientList.find(item => item.id === ingredient.id);
     //vrací množství, jednotku a název ingredience
     return `${ingredient.amount} ${ingredient.unit} ${ingredientDetails ? ingredientDetails.name : ''}`;
   });
 
   return ( //komponenta malých karet
     <Card className="smallCard">
-      <Card.Img className="smallCardImg" variant="top" src={props.recipe.imgUri} alt={props.recipe.name} />
+      <Card.Img className="smallCardImg" variant="top" src={recipe.imgUri} alt={recipe.name} />
       <Card.Body className="smallCardBody">
-        <Card.Title className="smallCardTitle">{props.recipe.name}</Card.Title>
+        <Card.Title className="smallCardTitle">{recipe.name}</Card.Title>
         <Card.Text className="smallCardText">
           <ul>
             {ingredients.map((ingredient, index) => ( //mapování ingrediencí a vytvoření seznamu
@@ -31,6 +31,9 @@ function RecipeSmall(props) {
             ))}
           </ul>
         </Card.Text>
+        <Button variant="primary" className="edit-btn" onClick={() => onEditClick(recipe)}>
+          <FaEdit />
+        </Button>
       </Card.Body>
     </Card>
   );

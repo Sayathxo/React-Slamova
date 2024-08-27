@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { units } from "./units";
 
 //Props: show - pro zobrazení modál.okna), handleClose - zavření, ingredientList - seznam možných ingrediencí
-function CreateRecipe({ show, handleClose, ingredientList }) {
+function CreateRecipe({ show, handleClose, ingredientList, recipe }) {
 
   //defaultní nastavení formuláře
   const defaultForm = {
@@ -29,6 +29,20 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
 
   // vyskakovací potvrzení o odeslání formuláře s novým receptem
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  // pro naplnění daty z formuláře při editu
+  useEffect(() => {
+    if (recipe) {
+      setRecipeName(recipe.name);
+      setRecipeInstructions(recipe.description);
+      setRecipeImgUri(recipe.imgUri);
+      setIngredients(recipe.ingredients.map(ingredient => ({
+        ingredientId: ingredient.id,
+        amount: ingredient.amount,
+        unit: ingredient.unit,
+      })));
+    }
+  }, [recipe]);
 
   // aktualizuje pole určité ingredience v seznamu 
   const handleIngredientChange = (index, field, value) => {
@@ -58,6 +72,7 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
     newIngredients.splice(index, 1);
     setIngredients(newIngredients);
   };
+
   // vytvoří objekt newRecipe se jménem, instrukcemi a filtrovaným seznamem ingrediencí
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
@@ -72,6 +87,7 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
 
     // vytvoření nového receptu 
     const newRecipe = {
+      id: recipe ? recipe.id : undefined, // přidáme ID pouze pokud existuje
       name: recipeName,
       description: recipeInstructions,
       imgUri: recipeImgUri,
@@ -87,10 +103,10 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
 
     console.log("Sending new recipe to server:", newRecipe);
 
-    //napojení na server
+    //napojení na server + změna URL endpointu při odesílání formuláře podle toho, jestli je to create nebo edit
     setRecipeAddCall({ state: 'pending' });
     try {
-      const res = await fetch(`http://localhost:3000/recipe/create`, {
+      const res = await fetch(`http://localhost:3000/recipe/${recipe ? 'update' : 'create'}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,6 +144,37 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
     }
   };
 
+  // Přidání funkce pro smazání receptu
+  const handleDelete = async () => {
+    if (!recipe) return;
+
+    try {
+      const res = await fetch(`http://localhost:3000/recipe/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: recipe.id })
+      });
+
+      if (res.status >= 400) {
+        const data = await res.json();
+        console.error("Error deleting recipe:", data);
+        setRecipeAddCall({ state: "error", error: data });
+      } else {
+        setShowSuccessMessage(true);
+        setTimeout(() => {
+          setShowSuccessMessage(false);
+          handleClose();
+          resetForm();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Error in handleDelete:", error);
+      setRecipeAddCall({ state: "error", error: { message: error.message } });
+    }
+  };
+
   // Reset formuláře
   const resetForm = () => {
     setRecipeName(defaultForm.recipeName);
@@ -146,11 +193,10 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
 
   // rendrování vlastní komponenty s tlačítky na přidání ingrediencí, zavření a odeslání formuláře
   return (
-
     <React.Fragment>
       <Modal show={show} onHide={handleModalClose} size="lg" centered>
         <Modal.Header closeButton>
-          <Modal.Title>Přidat nový recept</Modal.Title>
+          <Modal.Title>{recipe ? "Upravit recept" : "Přidat nový recept"}</Modal.Title>
         </Modal.Header>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Modal.Body>
@@ -210,7 +256,7 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
                     required
                   >
                     <option value="">Vyberte ingredienci</option>
-                    {ingredientList.map((ingredientOption) => (
+                    {ingredientList && ingredientList.map((ingredientOption) => (
                       <option key={ingredientOption.id} value={ingredientOption.id}>
                         {ingredientOption.name}
                       </option>
@@ -274,6 +320,11 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
                 }
               </div>
               <div className="d-flex flex-row gap-2">
+                {recipe && (
+                  <Button variant="danger" onClick={handleDelete}>
+                    Smazat recept
+                  </Button>
+                )}
                 <Button variant="secondary" onClick={handleModalClose}>
                   Zavřít
                 </Button>
@@ -281,7 +332,7 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
                   {recipeAddCall.state === 'pending' ? (
                     <span>Načítání...</span>
                   ) : (
-                    "Přidat recept"
+                    recipe ? "Upravit recept" : "Přidat recept"
                   )}
                 </Button>
               </div>
@@ -297,10 +348,11 @@ function CreateRecipe({ show, handleClose, ingredientList }) {
           transform: 'translate(-50%, -50%)',
           zIndex: 9999
         }}>
-          Recept byl úspěšně přidán!
+          Recept byl úspěšně {recipe ? "upraven" : "přidán"}!
         </div>
       )}
     </React.Fragment>
   );
 }
+
 export default CreateRecipe;

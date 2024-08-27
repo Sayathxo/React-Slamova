@@ -6,12 +6,15 @@ import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Icon from "@mdi/react";
+import CreateRecipe from "./CreateRecipe";
 import { mdiTable, mdiViewGridOutline, mdiViewList, mdiMagnify } from "@mdi/js";
 
 function RecipeList(props) {
   //uchovává aktuální typ zobrazení(grid,small,table)-pro změnu typu, se volá setViewType -> komponenta se přerenderuje
   const [viewType, setViewType] = useState("grid"); 
   const [searchBy, setSearchBy] = useState(""); // při prvním vykreslení - prázdný filtr
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
 
   //filtrování receptů dle zadaných hodnot
   const filteredRecipeList = useMemo(() => {
@@ -45,6 +48,15 @@ function RecipeList(props) {
     if (!event.target.value) setSearchBy(""); 
   }
 
+  const handleEditClick = (recipe) => {
+    setSelectedRecipe(recipe);
+    setShowEditModal(true);
+  };
+
+  const handleClose = () => {
+    setShowEditModal(false);
+    setSelectedRecipe(null);
+  };
   /** Navigační lišta - lupa a tlačítka na změny view
   * collapseOnSelect a expand="sm" - část nav se bude schovávat od sm níž
   * Navbar.Collapse - část nav, která se bude skrývat, viditelná na stisk Navbar.Toggle
@@ -103,12 +115,31 @@ function RecipeList(props) {
         {filteredRecipeList.length ? (
           <>
             <div className={"d-block d-md-none"}>
-              <RecipeSmallList recipeList={filteredRecipeList} ingredientList={props.ingredientList} />
+              <RecipeSmallList 
+                recipeList={filteredRecipeList} 
+                ingredientList={props.ingredientList} 
+                onEditClick={handleEditClick}  // Předání funkce pro editaci
+              />
             </div>
             <div className={"d-none d-md-block"}>
-              {viewType === "grid" && <RecipeGridList recipeList={filteredRecipeList} />}
-              {viewType === "small" && <RecipeSmallList recipeList={filteredRecipeList} ingredientList={props.ingredientList} />}
-              {viewType === "table" && <RecipeTableList recipeList={filteredRecipeList} />}
+              {viewType === "grid" && 
+                <RecipeGridList 
+                  recipeList={filteredRecipeList} 
+                  onEditClick={handleEditClick}  // Předání funkce pro editaci
+                />
+              }
+              {viewType === "small" && 
+                <RecipeSmallList 
+                  recipeList={filteredRecipeList} 
+                  ingredientList={props.ingredientList} 
+                  onEditClick={handleEditClick}  // Předání funkce pro editaci
+                />
+              }
+              {viewType === "table" && 
+                <RecipeTableList 
+                  recipeList={filteredRecipeList} 
+                />
+              }
             </div>
           </>
         ) : (
@@ -117,6 +148,12 @@ function RecipeList(props) {
           </div>
         )}
       </div>
+      <CreateRecipe
+        show={showEditModal}
+        handleClose={handleClose}
+        ingredientList={props.ingredientList}
+        recipe={selectedRecipe}
+      />
     </div>
   );
 }
