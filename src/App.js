@@ -1,18 +1,17 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import RecipeList from "./bricks/recipeList"
 import { useState, useEffect } from "react";
 import Icon from "@mdi/react";
 import { mdiLoading } from "@mdi/js";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown, Offcanvas, Button } from "react-bootstrap";
 import CreateRecipe from "./bricks/CreateRecipe";
+import { useUser } from './UserProvider';
 
 function App() {
-
   let navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false); //stavy pro modální okno CreateRecipe
-  // konstanty k uchovávání stavu načítání receptů/ingrediencí (výchozí stav je pending)
+  const { isAuthorized, toggleAuthorization } = useUser();
+  const [showModal, setShowModal] = useState(false);
   const [recipeLoadCall, setRecipeLoadCall] = useState({
     state: "pending",
   });
@@ -20,13 +19,10 @@ function App() {
     state: "pending",
   });
 
-  //Načtení seznamu receptů při prvním vykreslení komponenty
   useEffect(() => {
-    //volání API metodou GET
     fetch(`http://localhost:3000/recipe/list`, {
       method: "GET",
     })
-      //Pokud je odpověď úspěšná, uloží data do recipeLoadCall success, jinak error a uloží chybu
       .then(async (response) => {
         const responseJson = await response.json();
         if (response.status >= 400) {
@@ -35,13 +31,12 @@ function App() {
           setRecipeLoadCall({ state: "success", data: responseJson });
         }
       })
-      .catch(error => { //když dojde k chybě při volání API
+      .catch(error => {
         console.error('Error during fetch:', error);
         setRecipeLoadCall({ state: "error", error });
       });
   }, []);
 
-  //Načtení seznamu ingrediencí při prvním vykreslení komponenty -> vše jinak podobně jako u receptů výše
   useEffect(() => {
     fetch(`http://localhost:3000/ingredient/list`, {
       method: "GET",
@@ -60,7 +55,6 @@ function App() {
       });
   }, []);
 
-  //funkce rozhoduje, co se zobrazí na základě stavu načítání receptů
   function getRecipe() {
     switch (recipeLoadCall.state) {
       case "pending":
@@ -76,7 +70,7 @@ function App() {
               return (
                 <NavDropdown.Item
                   key={recipe.id}
-                  onClick={() => navigate("/recipeDetail?id=" + recipe.id)}
+                  onClick={() => navigate("/recipeDetail/" + recipe.id)}
                 >
                   {recipe.name}
                 </NavDropdown.Item>
@@ -92,9 +86,9 @@ function App() {
         );
       default:
         return null;
-
     }
   }
+
   const handleModalClose = () => setShowModal(false);
   const handleModalShow = () => setShowModal(true);
 
@@ -123,8 +117,13 @@ function App() {
                 {getRecipe()}
                 <Nav.Link onClick={() => navigate("/recipeList")}>Recepty</Nav.Link>
                 <Nav.Link onClick={() => navigate("/ingredientList")}>Ingredience</Nav.Link>
-                <Button variant="primary" onClick={handleModalShow} className="button-create-recipe">
-                  Přidej recept
+                {isAuthorized && (
+                  <Button variant="primary" onClick={handleModalShow} className="button-create-recipe">
+                    Přidej recept
+                  </Button>
+                )}
+                <Button variant="secondary" onClick={toggleAuthorization}>
+                  {isAuthorized ? 'Odhlásit' : 'Přihlásit'}
                 </Button>
               </Nav>
             </Offcanvas.Body>
@@ -132,7 +131,7 @@ function App() {
         </Container>
       </Navbar>
 
-      <Outlet />
+      <Outlet context={{ ingredients: ingredientLoadCall.data }} />
 
       <CreateRecipe
         show={showModal}
@@ -142,4 +141,5 @@ function App() {
     </div>
   );
 }
+
 export default App;

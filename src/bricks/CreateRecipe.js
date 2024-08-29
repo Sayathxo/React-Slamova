@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { units } from "./units";
+import { useUser } from "../UserProvider";
 
 //Props: show - pro zobrazení modál.okna), handleClose - zavření, ingredientList - seznam možných ingrediencí
 function CreateRecipe({ show, handleClose, ingredientList, recipe }) {
-
-  //defaultní nastavení formuláře
+  // kontrola přihlášení uživatele- použi tí UserContextu
+  const { isAuthorized } = useUser();
+  // defaultní nastavení formuláře
   const defaultForm = {
     recipeName: "",
     recipeInstructions: "",
@@ -85,6 +87,12 @@ function CreateRecipe({ show, handleClose, ingredientList, recipe }) {
       return;
     }
 
+    // kontrola oprávnění
+    if (!isAuthorized) {
+      alert("Bohužel nemůžeš přidávat nebo upravovat recepty.");
+      return;
+    }
+
     // vytvoření nového receptu 
     const newRecipe = {
       id: recipe ? recipe.id : undefined, // přidáme ID pouze pokud existuje
@@ -146,6 +154,11 @@ function CreateRecipe({ show, handleClose, ingredientList, recipe }) {
 
   // Přidání funkce pro smazání receptu
   const handleDelete = async () => {
+    if (!isAuthorized) {
+      alert("Ty mazat nemůžeš.");
+      return;
+    }
+
     if (!recipe) return;
 
     try {

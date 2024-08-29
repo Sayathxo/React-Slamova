@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { FaEdit } from 'react-icons/fa';
+import { useUser } from "../UserProvider";
 
 function RecipeCard({ recipe, onEditClick }) {
+    const { isAuthorized } = useUser(); // Použití stavu autorizace z UserProvider
     // nastavuje zda je popis receptu rozbalený nebo ne, výchozí ne
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -26,9 +28,11 @@ function RecipeCard({ recipe, onEditClick }) {
                         {isExpanded ? "\u00AB" : "\u00BB"}
                     </Button>
                 )}
-                <Button variant="primary" className="edit-btn" onClick={() => onEditClick(recipe)}>
-                    <FaEdit />
-                </Button>
+                {isAuthorized && (
+                    <Button variant="primary" className="edit-btn" onClick={() => onEditClick(recipe)}>
+                        <FaEdit />
+                    </Button>
+                )}
             </Card.Body>
         </Card>
     );

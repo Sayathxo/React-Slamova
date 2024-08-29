@@ -1,8 +1,10 @@
 import React from "react";
 import { Card, Button } from "react-bootstrap";
 import { FaEdit } from 'react-icons/fa';
+import { useUser } from "../UserProvider";
 
 function RecipeSmall({ recipe, ingredientList, onEditClick }) {
+  const { isAuthorized } = useUser(); // Použití stavu autorizace z UserProvider
   // Ověření, že props.recipe a props.recipe.ingredients existují
   if (!recipe || !recipe.ingredients || !Array.isArray(recipe.ingredients)) {
     return <div>Loading...</div>;
@@ -32,7 +34,11 @@ function RecipeSmall({ recipe, ingredientList, onEditClick }) {
           </ul>
         </Card.Text>
         <Button variant="primary" className="edit-btn" onClick={() => onEditClick(recipe)}>
-          <FaEdit />
+        {isAuthorized && (
+                    <Button variant="primary" className="edit-btn" onClick={() => onEditClick(recipe)}>
+                        <FaEdit />
+                    </Button>
+                )}
         </Button>
       </Card.Body>
     </Card>
