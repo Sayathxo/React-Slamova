@@ -7,15 +7,29 @@ const RecipeDetail = () => {
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
 
   useEffect(() => {
+    setError(null); // Reset chybového stavu při změně ID
+    setLoading(true); // Reset načítacího stavu při změně ID
+
+    if (!id) {
+      setError(new Error("Bohužel ID receptu nebylo zadáno."));
+      setLoading(false);
+      return;
+    }
+
     const fetchRecipe = async () => {
       try {
         const response = await fetch(`http://localhost:8000/recipe/get?id=${id}`);
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.statusText}`);
+          throw new Error(`Odezva sítě nebyla v pořádku: ${response.statusText}`);
+        }
+
+        if (!data || Object.keys(data).length === 0) {
+          throw new Error("Recept s tímto ID neexistuje.");
         }
 
         setRecipe(data);
@@ -34,10 +48,12 @@ const RecipeDetail = () => {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div className="error-page">{error.message}</div>;
   }
 
   const getIngredientName = (id) => {
+    if (!ingredients) return "Unknown ingredient"; // kontrola pro undefined
+
     const ingredient = ingredients.find(ingredient => ingredient.id === id);
     return ingredient ? ingredient.name : "Unknown ingredient";
   };

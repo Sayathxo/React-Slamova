@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import RecipeList from "../bricks/recipeList";
 import Icon from "@mdi/react";
 import { mdiLoading } from "@mdi/js";
@@ -72,11 +71,17 @@ function RecipeListAll() {
         );
       case "error":
         return (
-          <div className="error">
-            <div>Nepodařilo se načíst data o receptech nebo ingrediencích.</div>
-            <br />
-            <pre>{JSON.stringify(recipeLoadCall.error || ingredientLoadCall.error, null, 2)}</pre>
-          </div>
+          <>
+            <header className="App-header">
+              Recepty
+            </header>
+            <div className="error">
+              <div>Nepodařilo se načíst data o receptech.</div>
+            </div>
+            <footer>
+              Vytvořila &copy; Lenka Slámová 2024
+            </footer>
+          </>
         );
       default:
         return null;
