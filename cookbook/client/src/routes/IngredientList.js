@@ -49,8 +49,6 @@ function IngredientList() {
         return (
           <div className="error">
             <div>Nepodařilo se načíst data o ingrediencích.</div>
-            <br />
-            <pre>{JSON.stringify(ingredientLoadCall.error, null, 2)}</pre>
           </div>
         );
       default:

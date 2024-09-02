@@ -399,17 +399,17 @@
       },
       {
         "id": "3ac376e95dcbc246",
-        "amount": 0.5,
-        "unit": "ks"
-      },
-      {
-        "id": "3f702872fb8e99f8",
         "amount": 1,
-        "unit": "lžíce"
+        "unit": "ks"
       },
       {
         "id": "af691554e6c7feed",
         "amount": 4,
+        "unit": "lžíce"
+      },
+      {
+        "id": "3f702872fb8e99f8",
+        "amount": 1,
         "unit": "lžíce"
       }
     ],
@@ -528,5 +528,28 @@
       }
     ],
     "id": "e6a2450d6d6cd747"
+  },
+  {
+    "name": "Mramorová bábovka",
+    "description": "Smíchejte cukr s vejci, přidejte olej, mouku, mléko, prášek do pečiva, vanilkový cukr a dobře promíchejte.\nRozdělte těsto do dvou misek. Do jedné misky přidejte podle chuti nastrouhanou kůru z citronu (nejlépe v bio kvalitě).\nDo další misky s těstem dejte holandské kakao také podle chuti.\nNalijte do vymazané formy a pečte na 200 °C 45–50 min.\nPo upečení ještě horkou vyklopte na talíř. Krájejte vlažnou.",
+    "imgUri": "https://cdn.administrace.tv/2022/08/06/hd_169/9a874dd7a17c4b105a9d42b9eff53274.jpg",
+    "ingredients": [
+      {
+        "id": "40d227ce8a379758",
+        "amount": 150,
+        "unit": "ml"
+      },
+      {
+        "id": "7e85150c34fd62eb",
+        "amount": 1,
+        "unit": "ks"
+      },
+      {
+        "id": "34109b1b210e32ed",
+        "amount": 250,
+        "unit": "g"
+      }
+    ],
+    "id": "e228836781d2269f"
   }
 ]

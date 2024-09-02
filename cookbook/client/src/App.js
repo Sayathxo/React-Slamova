@@ -19,7 +19,7 @@ function App() {
     state: "pending",
   });
 
-  useEffect(() => {
+  const fetchRecipes = () => {
     fetch(`http://localhost:3000/recipe/list`, {
       method: "GET",
     })
@@ -35,6 +35,10 @@ function App() {
         console.error('Error during fetch:', error);
         setRecipeLoadCall({ state: "error", error });
       });
+  };
+
+  useEffect(() => {
+    fetchRecipes();
   }, []);
 
   useEffect(() => {
@@ -54,6 +58,10 @@ function App() {
         setIngredientLoadCall({ state: "error", error });
       });
   }, []);
+
+  const handleRecipeChange = () => {
+    fetchRecipes();
+  };
 
   function getRecipe() {
     switch (recipeLoadCall.state) {
@@ -137,6 +145,7 @@ function App() {
         show={showModal}
         handleClose={handleModalClose}
         ingredientList={ingredientLoadCall.data || []}
+        onRecipeChange={handleRecipeChange} 
       />
     </div>
   );

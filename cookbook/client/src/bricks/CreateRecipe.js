@@ -4,7 +4,7 @@ import { units } from "./units";
 import { useUser } from "../UserProvider";
 
 //Props: show - pro zobrazení modál.okna), handleClose - zavření, ingredientList - seznam možných ingrediencí
-function CreateRecipe({ show, handleClose, ingredientList, recipe }) {
+function CreateRecipe({ show, handleClose, ingredientList, recipe, onRecipeChange = () => {} }) {
   // kontrola přihlášení uživatele- použi tí UserContextu
   const { isAuthorized } = useUser();
   // defaultní nastavení formuláře
@@ -144,6 +144,7 @@ function CreateRecipe({ show, handleClose, ingredientList, recipe }) {
           setShowSuccessMessage(false);
           handleClose();
           resetForm();
+          onRecipeChange(); // Callback to update the recipe list
         }, 2000);
       }
     } catch (error) {
@@ -180,6 +181,7 @@ function CreateRecipe({ show, handleClose, ingredientList, recipe }) {
           setShowSuccessMessage(false);
           handleClose();
           resetForm();
+          onRecipeChange(); // Callback to update the recipe list
         }, 2000);
       }
     } catch (error) {

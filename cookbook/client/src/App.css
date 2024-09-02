@@ -138,7 +138,6 @@ footer {
 
 .error {
   background-color: lightpink;
-  padding: 32px;
 }
 
 /*** tlačítko na rozrollování delšího textu v view Tabulky ***/
@@ -205,19 +204,19 @@ footer {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  background: none !important;       /* Žádné pozadí */
-  border: none !important;           /* Žádný rámeček */
-  color: #2e3138 !important;         /* Barva ikony */
-  font-size: 1.5rem;      /* Velikost ikony */
-  cursor: pointer;        /* Ukazatel kurzoru */
+  background: none !important;       
+  border: none !important;           
+  color: #2e3138 !important;         
+  font-size: 1.5rem;      
+  cursor: pointer;        
 }
 
 .edit-btn:hover {
-  color: #5b616e !important;         /* Změna barvy při najetí myší */
+  color: #5b616e !important;         
 }
 
 .edit-btn:focus {
-  outline: none !important;          /* Žádný rámeček při fokusu */
+  outline: none !important;          
 }
 
 /*** stylování RecipeDeatil ***/
@@ -225,17 +224,17 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Full screen height */
-  background-color: #f8f9fa; /* Light grey background */
+  min-height: 100vh; 
+  background-color: #f8f9fa; 
   padding: 20px;
 }
 
 .recipe-detail-card {
-  background-color: #fff; /* White background */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  background-color: #fff; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   padding: 20px;
-  max-width: 600px; /* Max width for responsiveness */
+  max-width: 600px; 
   width: 100%;
   text-align: center;
 }
@@ -248,8 +247,8 @@ footer {
 .recipe-image {
   width: 100%;
   height: auto;
-  max-height: 300px; /* Fixed height for images */
-  object-fit: cover; /* Cover to maintain aspect ratio */
+  max-height: 300px; 
+  object-fit: cover; 
   border-radius: 8px;
   margin-bottom: 20px;
 }
@@ -260,13 +259,13 @@ footer {
 }
 
 .ingredient-list {
-  list-style: none; /* Remove bullets */
+  list-style: none; 
   padding: 0;
 }
 
 .ingredient-item {
   font-size: 1em;
-  border-bottom: 1px solid #ddd; /* Subtle bottom border */
+  border-bottom: 1px solid #ddd;
   padding: 10px 0;
 }
 
@@ -283,3 +282,11 @@ footer {
     font-size: 0.9em;
   }
 }
+
+/*** stylování chybových hlášek v recipeDetail ***/
+.error-page {
+  padding-top: 100px;
+  background-color: lightpink;
+}
+
+
